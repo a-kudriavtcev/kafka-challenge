@@ -1,3 +1,4 @@
+import uuid
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json, col, udf
 from pyspark.sql.functions import col, window
@@ -6,35 +7,25 @@ from schemas import WIKI_UPDATE_SCHEMA
 from pyspark.sql.functions import (
     window,
     count,
-    to_timestamp,
-    from_unixtime,
     col,
     when,
     sum as agg_sum,
 )
 
-# from delta import *
-
-# from delta import *
-
-import sys, os
-
-var = os.path.dirname(sys.executable)
-print("PYTHONPATH", var)
 
 spark = (
     SparkSession.builder.appName("Kafka Consumer")
     .master("local[*]")
-    # .config("spark.cassandra.connection.host", "172.18.0.5")
-    # .config("spark.cassandra.connection.port", "9042")
-    # .config("spark.cassandra.auth.username", "cassandra")
-    # .config("spark.cassandra.auth.password", "cassandra")
+    .config("spark.cassandra.connection.host", "cassandra")
+    .config("spark.cassandra.connection.port", "9042")
+    .config("spark.cassandra.auth.username", "cassandra")
+    .config("spark.cassandra.auth.password", "cassandra")
     .config("spark.driver.host", "localhost")
     .getOrCreate()
 )
 spark.sparkContext.setLogLevel("ERROR")
 
-
+# 172.18.0.5
 input_df = (
     spark.readStream.format("kafka")
     .option("kafka.bootstrap.servers", "kafka:9092")
@@ -43,7 +34,6 @@ input_df = (
     .load()
 )
 
-# input_df.printSchema()
 
 expanded_df = (
     input_df.selectExpr("CAST(value AS STRING)")
@@ -51,21 +41,52 @@ expanded_df = (
     .select("WikiUpdate.*")
 )
 
-# expanded_df.printSchema()
 expanded_df = expanded_df.select("timestamp", "wiki")
 
-# Define a window specification based on the timestamp column and the desired interval (e.g., 1 minute)
 window_spec = window("timestamp", "1 minute")
-
-# Perform aggregation to count the number of events per minute
-
-# total_events_per_min = expanded_df.groupBy(window_spec).count()
-
 
 transformed_df = expanded_df.groupBy(window('timestamp', '1 minute')).agg(
     (agg_sum(when(col('wiki') == 'dewiki', 1).otherwise(0)).alias('count_germany')),
     count('wiki').alias('worldwide'),
 )
+
+
+def save_to_cassandra(writeDF, epoch_id):
+    print("Printing epoch_id: ")
+    print(epoch_id)
+    uuid_udf = udf(lambda: str(uuid.uuid4()), StringType()).asNondeterministic()
+    writeDF = writeDF.withColumn("uuid", uuid_udf())
+
+    writeDF = writeDF.select(
+        writeDF.window.start.cast("string").alias("start_time"),
+        writeDF.window.end.cast("string").alias("end_time"),
+        "count_germany",
+        "worldwide",
+    )
+
+    writeDF.write.format("org.apache.spark.sql.cassandra").mode('append').options(
+        table="wiki_updates_table", keyspace="wiki_updates_ks"
+    ).save()
+
+    print(epoch_id, "Updated count saved to Cassandra")
+
+
+query1 = (
+    transformed_df.writeStream.trigger(processingTime="5 seconds")
+    .foreachBatch(save_to_cassandra)
+    .outputMode("update")
+    .start()
+    .awaitTermination()
+)
+
+# my_df = spark.createDataFrame(
+#     [
+#         {'count_germany': 5, 'worldwide': 6},
+#     ]
+# )
+
+# save_to_cassandra(my_df, 123)
+
 # total_events_per_min = total_events_per_min.withColumnRenamed('count', 'count_worldwide')
 
 # events_per_min_germany = (
@@ -123,13 +144,13 @@ transformed_df = expanded_df.groupBy(window('timestamp', '1 minute')).agg(
 
 
 # Show the result
-streaming_query = (
-    transformed_df.writeStream.outputMode("complete")
-    .format("console")
-    .option("truncate", False)
-    .start()
-    .awaitTermination()
-)
+# streaming_query = (
+#     transformed_df.writeStream.outputMode("complete")
+#     .format("console")
+#     .option("truncate", False)
+#     .start()
+#     .awaitTermination()
+# )
 
 # print("Events per min in Germany")
 # streaming_query = (

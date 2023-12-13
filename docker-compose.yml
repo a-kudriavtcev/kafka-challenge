@@ -44,8 +44,8 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
-      # cassandra:
-      #   condition: service_healthy
+      cassandra:
+        condition: service_healthy
     build:
       context: .
       dockerfile: producer/Dockerfile
@@ -75,29 +75,30 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
-      # cassandra:
-      #   condition: service_healthy
+      cassandra:
+        condition: service_healthy
     volumes:
       - type: bind
         source: ./bin/spark-setup.sh
         target: /spark-setup.sh
       - ./consumer:/home/scripts
-  # cassandra:
-  #   image: cassandra:4
-  #   container_name: cassandra
-  #   hostname: cassandra
-  #   healthcheck:
-  #     test: cqlsh -u cassandra -p cassandra -k test
-  #     interval: 5s
-  #     timeout: 5s
-  #     retries: 5
-  #   ports:
-  #     - '9042:9042'
 
-  # cassandra-create-ks-topic:
-  #   image: cassandra:4
-  #   container_name: cassandra-create-ks-topic
-  #   restart: "no"
-  #   entrypoint: [ "/cassandra-init.sh" ]
-  #   volumes:
-  #     - ./bin/cassandra-init.sh:/cassandra-init.sh
+  cassandra:
+    image: cassandra:4
+    container_name: cassandra
+    hostname: cassandra
+    healthcheck:
+      test: cqlsh -u cassandra -p cassandra -k wiki_updates_ks
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - '9042:9042'
+
+  cassandra-create-ks-topic:
+    image: cassandra:4
+    container_name: cassandra-create-ks-topic
+    restart: "no"
+    entrypoint: [ "/cassandra-init.sh" ]
+    volumes:
+      - ./bin/cassandra-init.sh:/cassandra-init.sh
