@@ -1,9 +1,4 @@
-from pydantic import BaseModel, Field, ConfigDict
-from typing import Optional
-from datetime import date
-from datetime import datetime
-import csv
-import json
+from pydantic import BaseModel, Field
 
 
 class WikiUpdate(BaseModel):

@@ -21,7 +21,7 @@ services:
           "--bootstrap-server",
           "kafka:9092",
           "--topic",
-          "WikiUpdates3",
+          "WikiUpdates",
           "--describe"
         ]
       interval: 10s
@@ -33,7 +33,7 @@ services:
     container_name: kafka_init
     command: [ "/bin/bash", "-c", "/create-topic.sh" ]
     environment:
-      - TEST_TOPIC_NAME=WikiUpdates3
+      - TEST_TOPIC_NAME=WikiUpdates
     volumes:
       - type: bind
         source: ./bin/create-topic.sh
