@@ -28,6 +28,7 @@ The reasons to use Cassandra DB in the current scenario are the following:
 - very good scalability
 - high availability
 - low ingestion latency and high throughput
+- flexible data model
 - we do not need to maintain data consistency
 
 There are, however, also some disadvantages:
