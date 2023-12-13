@@ -12,13 +12,13 @@ To run the project locally, execute `bin/start.sh`. This will spin up the docker
 To see the aggregated data:
 - wait until you start getting logs like `Batch No. 0 with updated count ingested into Cassandra`, emitted by the `spark-consumer` service
 - use a DB Client, for example [DbVisualizer](https://www.dbvis.com/), to access Cassandra DB
-- navigate to the keyspace `wiki_updates_ks` and go to the table `wiki_updates_table`. Note that [DbVisualizer](https://www.dbvis.com/) is sometimes *buggy* and won't display the table columns properly! In this case just *restart* it. You should see something like this:
+- navigate to the keyspace `wiki_updates_ks` and go to the table `wiki_updates_table`. Note that [DbVisualizer](https://www.dbvis.com/) is sometimes **buggy** and won't display the table columns properly! In this case just **restart** it. You should see something like this:
 
-<img width="915" alt="Bildschirmfoto 2023-12-13 um 23 57 50" src="https://github.com/a-kudriavtcev/kafka-challenge/assets/39767359/a505a5dc-f4a5-4def-bcaf-04d052689d29">
+<img width="920" alt="Bildschirmfoto 2023-12-14 um 00 53 36" src="https://github.com/a-kudriavtcev/kafka-challenge/assets/39767359/83c6d53a-366c-4e53-a491-5d0163aa7ddc">
 
 The final result should look like this:
 
-<img width="934" alt="Bildschirmfoto 2023-12-14 um 00 08 18" src="https://github.com/a-kudriavtcev/kafka-challenge/assets/39767359/4a0c51ca-85a3-4a74-b14d-34967fd39a55">
+<img width="922" alt="Bildschirmfoto 2023-12-14 um 00 51 32" src="https://github.com/a-kudriavtcev/kafka-challenge/assets/39767359/cb4ab6f7-5142-4ea8-9c71-f623041e5616">
 
 ## Motivation behind Cassandra DB
 
@@ -29,7 +29,7 @@ The reasons to use Cassandra DB in the current scenario are the following:
 - high availability
 - low ingestion latency and high throughput
 - flexible data model
-- we do not need to maintain data consistency
+- the data we get does not seem to require consistency
 
 There are, however, also some disadvantages:
 - advanced queries may be hard or even impossible to implement
