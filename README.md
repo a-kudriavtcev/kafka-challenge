@@ -6,5 +6,8 @@ This prototype offers a solution for processing streaming data which is represen
 # Setup
 To run the project locally:
 - execute `bin/start.sh`. This will spin up the necessary docker containers which will perform their respective tasks. 
-- wait until you see the aggregated Wikipedia updates logged by the consumer
-- stop 
+- wait until you see the aggregated Wikipedia updates logged by the consumer:
+  
+<img width="616" alt="Bildschirmfoto 2023-12-13 um 18 57 02" src="https://github.com/a-kudriavtcev/kafka-challenge/assets/39767359/8c761f88-4c2a-4f66-9ead-34a2cfc4226d">
+
+- stop the system with with `CMD+C` or `bin/stop.sh`
