@@ -34,5 +34,5 @@ The reasons to use Cassandra DB in the current scenario are the following:
 There are, however, also some disadvantages:
 - advanced queries may be hard or even impossible to implement
 - database may be complex to configure
-- CQL (Cassandra Query Language) may present a learning curve for developers
+- CQL (Cassandra Query Language) may present a steep learning curve for developers
 
