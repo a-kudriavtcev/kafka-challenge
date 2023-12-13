@@ -1,0 +1,42 @@
+from pyspark.sql.types import (
+    StructType,
+    StructField,
+    IntegerType,
+    StringType,
+    TimestampType,
+    BooleanType,
+)
+
+WIKI_UPDATE_SCHEMA = StructType(
+    [
+        StructField("schema_name", StringType()),
+        StructField("id", IntegerType()),
+        StructField("type", StringType()),
+        StructField("namespace", StringType()),
+        StructField("title", StringType()),
+        StructField("comment", StringType()),
+        StructField("timestamp", TimestampType()),
+        StructField("user", StringType()),
+        StructField("bot", StringType()),
+        StructField("minor", BooleanType()),
+        StructField("patrolled", StringType()),
+        StructField("server_url", StringType()),
+        StructField("server_name", StringType()),
+        StructField("server_script_path", StringType()),
+        StructField("wiki", StringType()),
+        StructField("parsedcomment", StringType()),
+        StructField("meta_domain", StringType()),
+        StructField("meta_uri", StringType()),
+        StructField("meta_request_id", StringType()),
+        StructField("meta_stream", StringType()),
+        StructField("meta_topic", StringType()),
+        StructField("meta_dt", StringType()),
+        StructField("meta_partition", IntegerType()),
+        StructField("meta_offset", IntegerType()),
+        StructField("meta_id", StringType()),
+        StructField("length_old", IntegerType()),
+        StructField("length_new", IntegerType()),
+        StructField("revision_old", IntegerType()),
+        StructField("revision_new", IntegerType()),
+    ]
+)
