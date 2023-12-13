@@ -3,6 +3,15 @@ from pyspark.sql.functions import from_json, col, udf
 from pyspark.sql.functions import col, window
 from pyspark.sql.types import StringType
 from schemas import WIKI_UPDATE_SCHEMA
+from pyspark.sql.functions import (
+    window,
+    count,
+    to_timestamp,
+    from_unixtime,
+    col,
+    when,
+    sum as agg_sum,
+)
 
 # from delta import *
 
@@ -50,8 +59,13 @@ window_spec = window("timestamp", "1 minute")
 
 # Perform aggregation to count the number of events per minute
 
-total_events_per_min = expanded_df.groupBy(window_spec).count()
+# total_events_per_min = expanded_df.groupBy(window_spec).count()
 
+
+transformed_df = expanded_df.groupBy(window('timestamp', '1 minute')).agg(
+    (agg_sum(when(col('wiki') == 'dewiki', 1).otherwise(0)).alias('count_germany')),
+    count('wiki').alias('worldwide'),
+)
 # total_events_per_min = total_events_per_min.withColumnRenamed('count', 'count_worldwide')
 
 # events_per_min_germany = (
@@ -110,7 +124,7 @@ total_events_per_min = expanded_df.groupBy(window_spec).count()
 
 # Show the result
 streaming_query = (
-    total_events_per_min.writeStream.outputMode("complete")
+    transformed_df.writeStream.outputMode("complete")
     .format("console")
     .option("truncate", False)
     .start()
