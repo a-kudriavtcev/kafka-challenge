@@ -22,17 +22,16 @@ The final result should look like this:
 
 ## Motivation behind Cassandra DB
 
-Using Cassandra DB in the current scenario offers the following advantages:
+The reasons to use Cassandra DB in the current scenario are the following:
 
-- fixed schema
-- low ingestion latency
-- familiar to devs
-- excellent scaling capabilies
+- capable to handle large volumes of data in real time
+- very good scalability
+- high availability
+- low ingestion latency and high throughput
+- we do not need to maintain data consistency
 
-
-
-
-disadvantages:
-slower for querying
-the schema changes, what than
+There are, however, also some disadvantages:
+- advanced queries may be hard or even impossible to implement
+- database may be complex to configure
+- CQL (Cassandra Query Language) may present a learning curve for developers
 
