@@ -20,6 +20,8 @@ The final result should look like this:
 
 <img width="922" alt="Bildschirmfoto 2023-12-14 um 00 51 32" src="https://github.com/a-kudriavtcev/kafka-challenge/assets/39767359/cb4ab6f7-5142-4ea8-9c71-f623041e5616">
 
+To stop the system, press `CMD+C` or execute `bin/stop.sh`
+
 ## Motivation behind Cassandra DB
 
 The reasons to use Cassandra DB in the current scenario are the following:
