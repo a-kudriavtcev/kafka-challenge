@@ -11,7 +11,11 @@ To run the project locally, execute `bin/start.sh`. This will spin up the docker
 
 To see the aggregated data:
 - wait until you start getting logs like `Batch No. 0 with updated count ingested into Cassandra`, emitted by the `spark-consumer` service
-- use a DB Client, for example [DbVisualizer](https://www.dbvis.com/), to access Cassandra DB
+- use a DB Client, for example [DbVisualizer](https://www.dbvis.com/), to access Cassandra DB:
+    - user: `cassandra`
+    - pwd: `cassandra`
+    - host: `localhost`
+    - port: `9042`
 - navigate to the keyspace `wiki_updates_ks` and go to the table `wiki_updates_table`. Note that [DbVisualizer](https://www.dbvis.com/) is sometimes **buggy** and won't display the table columns properly! In this case just **restart** it. You should see something like this:
 
 <img width="920" alt="Bildschirmfoto 2023-12-14 um 00 53 36" src="https://github.com/a-kudriavtcev/kafka-challenge/assets/39767359/83c6d53a-366c-4e53-a491-5d0163aa7ddc">
